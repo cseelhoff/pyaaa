@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Optional
 import random
 import json
 
 class Player:
-    def __init__(self, name: str, money=0, team=0, isHuman: bool=False):
+    def __init__(self, name: str, money: int=0, team: int=0, isHuman: bool=False):
         self.name = name
         self.money = money
         self.team = team
@@ -20,13 +20,14 @@ class Player:
         self.isHuman = isHuman
     def reset(self):
         self.money = 0
-        self.ownedFactoryTerritories.clear()
-        self.ownedFactoryTerritories.append(self.capital)
-        self.ownedValuedTerritories.clear()
-        self.ownedValuedTerritories.append(self.capital)
-        self.ownedTerritories.clear()
-        self.ownedTerritories.append(self.capital)
-        self.territoriesWithUnits.clear()
+        self.ownedFactoryTerritories: List[Territory] = []
+        self.ownedValuedTerritories: List[Territory] = []
+        self.ownedTerritories: List[Territory] = []
+        if self.capital:
+            self.ownedFactoryTerritories.append(self.capital)
+            self.ownedValuedTerritories.append(self.capital)
+            self.ownedTerritories.append(self.capital)
+        self.territoriesWithUnits: List[Territory] = []
     def __str__(self):
         return self.name
     def __repr__(self):
@@ -60,7 +61,7 @@ class UnitType:
         return(str(self))
 
 class DetailedUnit:
-    def __init__(self, unitType: UnitType, movesRemaining: int, hitsRemaining: int, payload: List=[]):
+    def __init__(self, unitType: UnitType, movesRemaining: int, hitsRemaining: int, payload: List[UnitType]=[]):
         self.unitType = unitType
         self.movesRemaining = movesRemaining
         self.hitsRemaining = hitsRemaining
@@ -93,7 +94,7 @@ class DetailedUnit:
         return(str(self))
 
 class Territory:
-    def __init__(self, players: List[Player], name: str, allTerritoryUnits: List[DetailedUnit], landValue: int=0, isWater: bool=False, owner: Player=None):
+    def __init__(self, players: List[Player], name: str, allTerritoryUnits: List[DetailedUnit], landValue: int=0, isWater: bool=False, owner: Optional[Player]=None):
         self.name = name
         self.landValue = landValue
         self.isWater = isWater
